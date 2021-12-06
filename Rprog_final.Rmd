@@ -14,8 +14,18 @@ library(leaflet)
 library(DT)
 library(plotly)
 library(flexdashboard)
-ufo_sightings <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-25/ufo_sightings.csv")
-#exercise 1----
+
+
+#Goal: to assess the diveristy ratio among students across all the Higher Education institutions in Colorado
+
+diversity_school <- read.csv("diversity_school.csv")
+
+##data manipulation
+#filter data just for Colorado
+
+diversity_school <- read.csv("diversity_school.csv")
+
+
 ##data manipulation
 ufo_sightings_us <- ufo_sightings %>% 
   filter(country == "us") %>% 

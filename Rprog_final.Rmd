@@ -15,29 +15,40 @@ library(DT)
 library(plotly)
 library(flexdashboard)
 
+#try fuzzyjoint package
 
-#Goal: to assess the diveristy ratio among students across all the Higher Education institutions in Colorado
+#Goal: to assess the diversity ratio among students across all the Higher Education institutions in Colorado
+
+## data manipulation
+# read data and filter just for Colorado
 
 diversity_school <- read.csv("diversity_school.csv")
 
-##data manipulation
-#filter data just for Colorado
+diversity_school <- diversity_school %>% 
+  filter(state == "Colorado") 
 
-diversity_school <- read.csv("diversity_school.csv")
+#Count amount of schools in Colorado
+diversity_school %>% 
+  select(name) %>%
+  distinct() %>%
+  count()
+
+#top ten universities in CO (based on enrollment)
+top10_co_schools <- diversity_school %>%
+  select(name, total_enrollment) %>%
+  distinct() %>%
+  head(n= 10)
 
 
-##data manipulation
-ufo_sightings_us <- ufo_sightings %>% 
-  filter(country == "us") %>% 
-  mutate(date_time = mdy_hm(date_time),
-         date_documented = mdy(date_documented))
+
+
 ##parameterized Rmd (see params.Rmd)
 #exercise 2----
 ##leaflet for `encounter_length`
 pal <- colorQuantile("YlOrRd", NULL, n = 8)
-leaflet(ufo_sightings) %>% 
+leaflet(<dataset>) %>% 
   addTiles() %>%
-  addCircleMarkers(color = ~pal(encounter_length))
+  addCircleMarkers(color = ~pal(<columnt hat I actually want to show>))
 ##plotly for `shape`
 #filter to 3 shapes
 ufo_sightings_shapes <- ufo_sightings %>% 
@@ -47,6 +58,9 @@ p <- ggplot(data = ufo_sightings_shapes, aes(x = ufo_shape)) +
   geom_bar(position = "dodge")
 ggplotly(p)
 #DT
+
+ interactive data table:
+   
 datatable(ufo_sightings_us, options = list(pageLength = 5))
 ufo_sightings_co <- ufo_sightings %>% 
   mutate(date_time = mdy_hm(date_time),

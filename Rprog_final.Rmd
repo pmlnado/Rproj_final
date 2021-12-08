@@ -40,11 +40,12 @@ co_schools_data %>%
   #head(n= 10)
 
 #pivot wider so that each ethnic group has it's own column, and there is only one University name in the names column
-
+co_schools_data <- pivot_wider(co_schools_data,
+            names_from = "category",
+            values_from = enrollment)
 
 #top ten universities in CO (based on enrollment)
 top10_co_schools_enrollment <- co_schools_data %>%
-  select(name, total_enrollment) %>%
   distinct() %>%
   head(n= 10)
 
@@ -54,15 +55,22 @@ top10_co_schools_coordinates <- read.csv("co_top10uni_coordinates.csv")
 
 top10_co_schools_coordinates
 
+#change school name column name to match in both datasets
+
+top10_co_schools_coordinates
+top10_co_schools_enrollment
+
+top10_co_schools_enrollment <- top10_co_schools_enrollment %>%
+  rename(school = name)
+#ok, now both have school names listed in column "school". Now join.
+
+
+#merge data sets
+top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollment)
+
+
 #convert to an sf object 
-
-
-#Don't need this -> set CO state bpundaries for map - this is for a static map
-co_counties <- counties(state = "CO", cb = TRUE, class = "sf")
-library(ggplot2)
-ggplot() + 
-  geom_sf(data = co_counties)
-
+top10CoData = st_as_sf(top10CoData, coords = c("longitude", "latitude"))
 
 
 #plan: pivot data wider -> join datasets -> convert into sf object -> good to map

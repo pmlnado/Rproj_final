@@ -21,6 +21,8 @@ library(tigris)
 
 #Goal: to assess the diversity ratio among students across all the Higher Education institutions in Colorado
 
+#plan: pivot data wider -> join datasets -> convert into sf object -> good to map
+
 ## data manipulation
 # read data and filter just for Colorado
 
@@ -68,42 +70,22 @@ top10_co_schools_enrollment <- top10_co_schools_enrollment %>%
 #merge data sets
 top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollment)
 
-
-#convert to an sf object 
-top10CoData = st_as_sf(top10CoData, coords = c("longitude", "latitude"))
+top10CoData
 
 
-#plan: pivot data wider -> join datasets -> convert into sf object -> good to map
+##########
+#convert to dataset an sf object 
+#top10CoData = st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%
+  #st_set_crs(4269)
 
-##parameterized Rmd (see params.Rmd)
-#exercise 2----
-##leaflet for `encounter_length`
-pal <- colorQuantile("YlOrRd", NULL, n = 8)
-leaflet(top10_co_schools_coordinates) %>% 
-  addTiles() %>%
-  addCircleMarkers(color = ~pal(top10_co_schools_coordinates))
+#pull geophraphical data from tigris to map the diversity data. convert to an sf object.
 
-class(co_counties$geometry)
+#co_counties <- counties(state = "CO", class = "sf")
+#class(co_counties)
+#############
+#OK, I am going to try to plot the distribution of ethnics groups across the top 10 largest CO campuses and have that plot pop up in my interactive map using the popuo function.
 
 
-
-##plotly for `shape`
-#filter to 3 shapes
-ufo_sightings_shapes <- ufo_sightings %>% 
-  filter(ufo_shape %in% c("circle", "fireball", "oval"))
-#plot
-p <- ggplot(data = ufo_sightings_shapes, aes(x = ufo_shape)) +
-  geom_bar(position = "dodge")
-ggplotly(p)
-#DT
-
- interactive data table:
-   
-datatable(ufo_sightings_us, options = list(pageLength = 5))
-ufo_sightings_co <- ufo_sightings %>% 
-  mutate(date_time = mdy_hm(date_time),
-         sighting_year = year(date_time)) %>% 
-  filter(state == 'co')
 ```
 
 Column {data-width=650}
@@ -112,20 +94,22 @@ Column {data-width=650}
 ### Chart A
 
 ```{r}
+
 pal <- colorQuantile("YlOrRd", NULL, n = 8)
+
 leaflet() %>% 
   addTiles() %>% 
   fitBounds(-102.03,37,-109.03, 41) %>% 
   addTiles() %>% 
-  addCircleMarkers(ufo_sightings_co$longitude, 
-                   ufo_sightings_co$latitude, 
-                   color = ufo_sightings_co$encounter_length, 
+  addCircleMarkers(top10CoData$total_enrollment, lng = top10CoData$
+                    longitude, lat = top10CoData$latitude,
+                   color = top10CoData$total_enrollment, 
                    radius = 5, 
                    fill = T,
                    fillOpacity = 0.2,
                    opacity = 0.6,
-                   popup = paste(ufo_sightings_co$city_area,
-                                 ufo_sightings_co$sighting_year, 
+                   popup = paste(top10CoData$Black,
+                                 top10CoData$White, 
                                  sep = ",")) 
 ```
 

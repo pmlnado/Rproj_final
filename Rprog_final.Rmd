@@ -47,6 +47,7 @@ co_schools_data_wider <- pivot_wider(co_schools_data,
             values_from = enrollment)
 
 #top ten universities in CO (based on enrollment)
+
 top10_co_schools_enrollment <- co_schools_data_wider %>%
   distinct() %>%
   head(n= 10)

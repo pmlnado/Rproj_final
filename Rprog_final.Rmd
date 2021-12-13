@@ -114,17 +114,22 @@ class(co_counties)
 
 #mutate longitude values to negative, before making it an sf
 
+#write pop-up content to call later
+content <- paste(sep = "<br/>",
+  top10CoData$school,
+  top10CoData_sf$total_enrollment,
+  top10CoData_sf$`Total Minority`)
+
+
+
 leaflet() %>% 
-  addTiles() %>% 
-  #fitBounds(-102.03,37,-109.03, 41) %>% 
   addTiles() %>% 
   addMarkers(data = top10CoData_sf,
                    popup = paste(top10CoData_sf$total_minority,
-                                 sep = ","))
-?addCircleMarkers
-
-top10CoData_sf
-top10CoData
+                                 sep = " ",
+                                 label = content))
+                                   
+                              
 
 ```
 

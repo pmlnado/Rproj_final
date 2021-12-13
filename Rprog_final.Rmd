@@ -30,7 +30,7 @@ diversity_school <- read.csv("data/diversity_school.csv")
 co_schools_data <- diversity_school %>% 
   filter(state == "Colorado") 
 
-co_schools_data
+#co_schools_data
 
 #Count amount of schools in Colorado
 co_schools_data %>% 
@@ -57,12 +57,11 @@ top10_co_schools_enrollment <- co_schools_data_wider %>%
 #coordinates for the top 10 schools in Colorado
 top10_co_schools_coordinates <- read.csv("data/co_top10uni_coordinates.csv")
 
-top10_co_schools_coordinates
 
 #change school name column name to match in both datasets
 
-top10_co_schools_coordinates
-top10_co_schools_enrollment
+#top10_co_schools_coordinates
+#top10_co_schools_enrollment
 
 top10_co_schools_enrollment <- top10_co_schools_enrollment %>%
   rename(school = name)
@@ -72,7 +71,6 @@ top10_co_schools_enrollment <- top10_co_schools_enrollment %>%
 #merge data sets
 top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollment)
 
-top10CoData
 
 
 
@@ -89,6 +87,7 @@ Column {data-width=650}
 
 ```{r}
 
+
 pal <- colorQuantile("YlOrRd", NULL, n = 8)
 top10CoData <-top10CoData %>%
   mutate(longitude = top10CoData$longitude*(-1))
@@ -96,7 +95,7 @@ top10CoData <-top10CoData %>%
 top10CoData
 
 
-#Make the data an sf object 
+##Make the data an sf object 
 class(top10CoData)
 
 top10CoData_sf <- st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%

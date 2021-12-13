@@ -119,33 +119,35 @@ Column {data-width=350}
 
 ### Chart B
 
-```{r fig.height=6, fig.width=5}
+```{r fig.height=7, fig.width=6}
 # install.packages("ggmosaic")
 library(ggplot2)
 library(ggmosaic)
+#pivot longer to obtain enrollment counts from "background"
 top10formosiac <- top10_co_schools_enrollment %>%
   pivot_longer(cols = Women:`Non-Resident Foreign`,
                names_to = "Background",
                values_to = "enrollment")
-
+#building a mosaic plot
 mosaic <- top10formosiac %>%
   ggplot() +
-  geom_mosaic(aes(x=product(name), fill = Background, na.rm = TRUE, weight = enrollment), 
-              offset = 0.005) + 
+  geom_mosaic(aes(x=product(name), fill = Background, na.rm = TRUE, 
+                  weight = enrollment), offset = 0.005) + 
   theme_minimal() +
-  theme(plot.title=element_text(size=26), legend.position="left", 
+#aesthetic elements  
+  theme(plot.title=element_text(size=30), legend.position="left", 
         legend.key.size = unit(1, 'cm'),legend.title = element_text(size=23), 
         legend.text = element_text(size=16), aspect.ratio = 1, 
         axis.text.x = element_text(angle = 45, hjust = 1, size = 23), 
         axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+#reversing legend order and adding titles
   scale_fill_discrete(guide = guide_legend(reverse=TRUE)) +
   labs(y= " ", x= " ", 
        title = "Visualizing Diversity in Colorado: 10 Largest Universities") +
-  geom_text(data = ggplot_build(mosaic)$data[[1]], 
+#adding enrollment counts to mosaic squares
+  geom_text(data = ggplot_build(mosaic)$data[[1]],
             aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
-  
 mosaic
-
 ```
 
 ### Chart C

@@ -25,7 +25,7 @@ library(tigris)
 ## data manipulation
 # read data and filter just for Colorado
 
-diversity_school <- read.csv("diversity_school.csv")
+diversity_school <- read.csv("data/diversity_school.csv")
 
 co_schools_data <- diversity_school %>% 
   filter(state == "Colorado") 
@@ -43,12 +43,13 @@ co_schools_data %>%
   #head(n= 10)
 
 #pivot wider so that each ethnic group has it's own column, and there is only one University name in the names column
-co_schools_data <- pivot_wider(co_schools_data,
+co_schools_data_wider <- pivot_wider(co_schools_data,
             names_from = "category",
             values_from = enrollment)
 
 #top ten universities in CO (based on enrollment)
-top10_co_schools_enrollment <- co_schools_data %>%
+
+top10_co_schools_enrollment <- co_schools_data_wider %>%
   distinct() %>%
   head(n= 10)
 
@@ -89,7 +90,11 @@ Column {data-width=650}
 ```{r}
 
 pal <- colorQuantile("YlOrRd", NULL, n = 8)
+top10CoData <-top10CoData %>%
+  mutate(longitude = top10CoData$longitude*(-1))
+
 top10CoData
+
 
 #Make the data an sf object 
 class(top10CoData)
@@ -107,21 +112,20 @@ class(top10CoData_sf)
 co_counties <- counties(state = "CO", class = "sf")
 class(co_counties)
 
+#mutate longitude values to negative, before making it an sf
+
 leaflet() %>% 
   addTiles() %>% 
-  fitBounds(-102.03,37,-109.03, 41) %>% 
+  #fitBounds(-102.03,37,-109.03, 41) %>% 
   addTiles() %>% 
-  addCircleMarkers(top10CoData_sf$total_enrollment,
-                   top10CoData$latitude,
-                   top10CoData$longitude,
-                   color = top10CoData$total_enrollment, 
-                   radius = 5, 
-                   fill = T,
-                   fillOpacity = 0.2,
-                   opacity = 0.6,
-                   popup = paste(top10CoData$total_minority,
+  addMarkers(data = top10CoData_sf,
+                   popup = paste(top10CoData_sf$total_minority,
                                  sep = ","))
 ?addCircleMarkers
+
+top10CoData_sf
+top10CoData
+
 ```
 
 Column {data-width=350}
@@ -129,24 +133,84 @@ Column {data-width=350}
 
 ### Chart B
 
-```{r}
-#ufo_sightings_co <-  ufo_sightings_co %>%
-# group_by(sighting_year) %>%
-#   summarize(n_year = n()) %>%
-#   ungroup()
-# ggplot(ufo_sightings_co, aes(x = sighting_year, y = n_year)) +
-#   geom_line() +
-#   ggthemes::theme_few() +
-#   labs(x = "Year", y = "Sighting Count in CO", title = "UFO Sightings in CO per Year")
+<<<<<<< HEAD
+```{r fig.height=7, fig.width=6}
+# install.packages("ggmosaic")
+library(ggplot2)
+library(ggmosaic)
+
+
+#pivot longer to obtain enrollment counts from "background"
+top10formosiac <- top10_co_schools_enrollment %>%
+  pivot_longer(cols = Women:`Non-Resident Foreign`,
+               names_to = "Background",
+               values_to = "enrollment")
+#building a mosaic plot
+mosaic <- top10formosiac %>%
+  ggplot() +
+  geom_mosaic(aes(x=product(name), fill = Background, na.rm = TRUE, 
+                  weight = enrollment), offset = 0.005) + 
+  theme_minimal() +
+#aesthetic elements  
+  theme(plot.title=element_text(size=30), legend.position="left", 
+        legend.key.size = unit(1, 'cm'),legend.title = element_text(size=23), 
+        legend.text = element_text(size=16), aspect.ratio = 1, 
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 23), 
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+#reversing legend order and adding titles
+  scale_fill_discrete(guide = guide_legend(reverse=TRUE)) +
+  labs(y= " ", x= " ", 
+       title = "Visualizing Diversity in Colorado: 10 Largest Universities") +
+#adding enrollment counts to mosaic squares
+  geom_text(data = ggplot_build(mosaic)$data[[1]],
+            aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
+mosaic
+>>>>>>> 26f700147e15af15b06aa2442c06e123cbf4a297
 ```
 
 ### Chart C
-
+Table 
 ```{r}
+<<<<<<< HEAD
+=======
+#Reading in all potential data sets
+diversity_school <- read.csv("data/diversity_school.csv")
+all_schools <- read.csv("data/all-schools.csv")
+historical_tuition <- read.csv("data/historical_tuition.csv")
+salary_potential  <- read.csv("data/salary_potential.csv")
+student_diversity <- read.csv("data/student_diversity.csv")
+tuition_cost <- read.csv("data/tuition_cost.csv")
+tuition_income <- read.csv("data/tuition_income.csv")
+
+#Filtering down to just Colorado Schools 
+library(dplyr)
+
+co_school_salary_data <- salary_potential %>% 
+  filter(state_name == "Colorado") 
+
+co_school_salary_data
+
+#Top 10 Colorado Schools with Highest Early Career Pay 
+top10_co_early_salary <-  co_school_salary_data %>%
+  arrange(desc(early_career_pay)) %>%
+  head(n=10)
+
+top10_co_early_salary %>%
+  datatable()
+
+
+ 
+
+>>>>>>> 26f700147e15af15b06aa2442c06e123cbf4a297
 # ufo_sightings_co <-  ufo_sightings_co %>%
 #   group_by(sighting_year) %>%
 #   summarize(n_year = n()) %>%
 #   ungroup()
 # ufo_sightings_co %>%
 # datatable()
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 26f700147e15af15b06aa2442c06e123cbf4a297
 ```

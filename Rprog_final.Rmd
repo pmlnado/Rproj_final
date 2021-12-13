@@ -148,12 +148,42 @@ mosaic
 ```
 
 ### Chart C
-
+Table 
 ```{r}
+#Reading in all potential data sets
+diversity_school <- read.csv("data/diversity_school.csv")
+all_schools <- read.csv("data/all-schools.csv")
+historical_tuition <- read.csv("data/historical_tuition.csv")
+salary_potential  <- read.csv("data/salary_potential.csv")
+student_diversity <- read.csv("data/student_diversity.csv")
+tuition_cost <- read.csv("data/tuition_cost.csv")
+tuition_income <- read.csv("data/tuition_income.csv")
+
+#Filtering down to just Colorado Schools 
+library(dplyr)
+
+co_school_salary_data <- salary_potential %>% 
+  filter(state_name == "Colorado") 
+
+co_school_salary_data
+
+#Top 10 Colorado Schools with Highest Early Career Pay 
+top10_co_early_salary <-  co_school_salary_data %>%
+  arrange(desc(early_career_pay)) %>%
+  head(n=10)
+
+top10_co_early_salary %>%
+  datatable()
+
+
+ 
+
 # ufo_sightings_co <-  ufo_sightings_co %>%
 #   group_by(sighting_year) %>%
 #   summarize(n_year = n()) %>%
 #   ungroup()
 # ufo_sightings_co %>%
 # datatable()
+
+
 ```

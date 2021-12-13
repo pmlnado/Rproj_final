@@ -55,7 +55,7 @@ top10_co_schools_enrollment <- co_schools_data_wider %>%
 
 
 #coordinates for the top 10 schools in Colorado
-top10_co_schools_coordinates <- read.csv("co_top10uni_coordinates.csv")
+top10_co_schools_coordinates <- read.csv("data/co_top10uni_coordinates.csv")
 
 top10_co_schools_coordinates
 

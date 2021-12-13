@@ -137,9 +137,8 @@ Column {data-width=350}
 
 ### Chart B
 
-<<<<<<< HEAD
 ```{r fig.height=7, fig.width=6}
-# install.packages("ggmosaic")
+
 library(ggplot2)
 library(ggmosaic)
 
@@ -169,14 +168,12 @@ mosaic <- top10formosiac %>%
   geom_text(data = ggplot_build(mosaic)$data[[1]],
             aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
 mosaic
->>>>>>> 26f700147e15af15b06aa2442c06e123cbf4a297
+
 ```
 
 ### Chart C
 Table 
 ```{r}
-<<<<<<< HEAD
-=======
 #Reading in all potential data sets
 diversity_school <- read.csv("data/diversity_school.csv")
 all_schools <- read.csv("data/all-schools.csv")
@@ -203,18 +200,6 @@ top10_co_early_salary %>%
   datatable()
 
 
- 
-
->>>>>>> 26f700147e15af15b06aa2442c06e123cbf4a297
-# ufo_sightings_co <-  ufo_sightings_co %>%
-#   group_by(sighting_year) %>%
-#   summarize(n_year = n()) %>%
-#   ungroup()
-# ufo_sightings_co %>%
-# datatable()
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 26f700147e15af15b06aa2442c06e123cbf4a297
 ```

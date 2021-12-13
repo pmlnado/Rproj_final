@@ -160,9 +160,9 @@ mosaic <- top10formosiac %>%
 #reversing legend order and adding titles
   scale_fill_discrete(guide = guide_legend(reverse=TRUE)) +
   labs(y= " ", x= " ", 
-       title = "Visualizing Diversity in Colorado: 10 Largest Universities") +
+       title = "Visualizing Diversity in Colorado: 10 Largest Universities") 
 #adding enrollment counts to mosaic squares
-  geom_text(data = ggplot_build(mosaic)$data[[1]],
+mosaic <- mosaic + geom_text(data = ggplot_build(mosaic)$data[[1]],
             aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
 mosaic
 ```

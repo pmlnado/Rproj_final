@@ -148,7 +148,7 @@ Column {data-width=350}
 -----------------------------------------------------------------------
 
 ### Diversity Mosaic Plot
-```{r fig.height=5, fig.width=5}
+```{r fig.height=8, fig.width=10}
 # install.packages("ggmosaic")
 library(ggplot2)
 library(ggmosaic)
@@ -168,8 +168,8 @@ mosaic <- top10formosiac %>%
 #aesthetic elements  
   theme(plot.title=element_text(size=20), legend.position="right", 
         legend.key.size = unit(0.5, 'cm'),legend.title = element_text(size=16), 
-        legend.text = element_text(size=12), aspect.ratio = .5, 
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 14), 
+        legend.text = element_text(size=12), aspect.ratio = 1, 
+        axis.text.x = element_text(angle = 270, hjust = 2, size = 14), 
         axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
 #reversing legend order and adding titles
   scale_fill_discrete(guide = guide_legend(reverse=TRUE)) +

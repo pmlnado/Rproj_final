@@ -55,7 +55,7 @@ top10_co_schools_enrollment <- co_schools_data_wider %>%
 
 
 #coordinates for the top 10 schools in Colorado
-top10_co_schools_coordinates <- read.csv("co_top10uni_coordinates.csv")
+top10_co_schools_coordinates <- read.csv("data/co_top10uni_coordinates.csv")
 
 top10_co_schools_coordinates
 
@@ -133,7 +133,7 @@ Column {data-width=350}
 
 ### Chart B
 
-<<<<<<< HEAD
+# title
 ```{r fig.height=7, fig.width=6}
 # install.packages("ggmosaic")
 library(ggplot2)
@@ -148,7 +148,7 @@ top10formosiac <- top10_co_schools_enrollment %>%
 #building a mosaic plot
 mosaic <- top10formosiac %>%
   ggplot() +
-  geom_mosaic(aes(x=product(name), fill = Background, na.rm = TRUE, 
+  geom_mosaic(aes(x=product(school), fill = Background, na.rm = TRUE, 
                   weight = enrollment), offset = 0.005) + 
   theme_minimal() +
 #aesthetic elements  
@@ -165,14 +165,12 @@ mosaic <- top10formosiac %>%
   geom_text(data = ggplot_build(mosaic)$data[[1]],
             aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
 mosaic
->>>>>>> 26f700147e15af15b06aa2442c06e123cbf4a297
 ```
 
 ### Chart C
 Table 
 ```{r}
-<<<<<<< HEAD
-=======
+
 #Reading in all potential data sets
 diversity_school <- read.csv("data/diversity_school.csv")
 all_schools <- read.csv("data/all-schools.csv")
@@ -201,16 +199,12 @@ top10_co_early_salary %>%
 
  
 
->>>>>>> 26f700147e15af15b06aa2442c06e123cbf4a297
+
 # ufo_sightings_co <-  ufo_sightings_co %>%
 #   group_by(sighting_year) %>%
 #   summarize(n_year = n()) %>%
 #   ungroup()
 # ufo_sightings_co %>%
 # datatable()
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 26f700147e15af15b06aa2442c06e123cbf4a297
 ```

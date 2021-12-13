@@ -95,7 +95,7 @@ top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollm
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### Naly's Figure
 
 ```{r fig.height=5, fig.width=5}
 

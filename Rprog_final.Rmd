@@ -17,7 +17,6 @@ library(flexdashboard)
 library(sf)
 library(tigris)
 
-#try fuzzyjoint package
 
 #Goal: to assess the diversity ratio among students across all the Higher Education institutions in Colorado
 
@@ -30,6 +29,8 @@ diversity_school <- read.csv("diversity_school.csv")
 
 co_schools_data <- diversity_school %>% 
   filter(state == "Colorado") 
+
+co_schools_data
 
 #Count amount of schools in Colorado
 co_schools_data %>% 
@@ -73,15 +74,7 @@ top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollm
 top10CoData
 
 
-##########
-#convert to dataset an sf object 
-#top10CoData = st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%
-  #st_set_crs(4269)
 
-#pull geophraphical data from tigris to map the diversity data. convert to an sf object.
-
-#co_counties <- counties(state = "CO", class = "sf")
-#class(co_counties)
 #############
 #OK, I am going to try to plot the distribution of ethnics groups across the top 10 largest CO campuses and have that plot pop up in my interactive map using the popuo function.
 
@@ -101,28 +94,34 @@ top10CoData
 #Make the data an sf object 
 class(top10CoData)
 
-top10CoData_sf <- st_as_sf(top10CoData, coords = c("longitude", "latitude"))
+top10CoData_sf <- st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%
+  st_set_crs(4269)
+
                                               
 top10CoData_sf
 
 class(top10CoData_sf)
 
-##
+#pull geophraphical data from tigris to map the diversity data. convert to an sf object.
+
+co_counties <- counties(state = "CO", class = "sf")
+class(co_counties)
 
 leaflet() %>% 
   addTiles() %>% 
   fitBounds(-102.03,37,-109.03, 41) %>% 
   addTiles() %>% 
-  addCircleMarkers(top10CoData$total_enrollment, lon = "top10CoData$
-                    longitude", lat = "top10CoData$latitude",
+  addCircleMarkers(top10CoData_sf$total_enrollment,
+                   top10CoData$latitude,
+                   top10CoData$longitude,
                    color = top10CoData$total_enrollment, 
                    radius = 5, 
                    fill = T,
                    fillOpacity = 0.2,
                    opacity = 0.6,
-                   popup = paste(top10CoData$Black,
-                                 top10CoData$White, 
-                                 sep = ",")) 
+                   popup = paste(top10CoData$total_minority,
+                                 sep = ","))
+?addCircleMarkers
 ```
 
 Column {data-width=350}
@@ -131,23 +130,23 @@ Column {data-width=350}
 ### Chart B
 
 ```{r}
-ufo_sightings_co <-  ufo_sightings_co %>%
-  group_by(sighting_year) %>%
-  summarize(n_year = n()) %>%
-  ungroup()
-ggplot(ufo_sightings_co, aes(x = sighting_year, y = n_year)) +
-  geom_line() +
-  ggthemes::theme_few() +
-  labs(x = "Year", y = "Sighting Count in CO", title = "UFO Sightings in CO per Year")
+#ufo_sightings_co <-  ufo_sightings_co %>%
+# group_by(sighting_year) %>%
+#   summarize(n_year = n()) %>%
+#   ungroup()
+# ggplot(ufo_sightings_co, aes(x = sighting_year, y = n_year)) +
+#   geom_line() +
+#   ggthemes::theme_few() +
+#   labs(x = "Year", y = "Sighting Count in CO", title = "UFO Sightings in CO per Year")
 ```
 
 ### Chart C
 
 ```{r}
-ufo_sightings_co <-  ufo_sightings_co %>%
-  group_by(sighting_year) %>%
-  summarize(n_year = n()) %>%
-  ungroup()
-ufo_sightings_co %>%
-datatable()
+# ufo_sightings_co <-  ufo_sightings_co %>%
+#   group_by(sighting_year) %>%
+#   summarize(n_year = n()) %>%
+#   ungroup()
+# ufo_sightings_co %>%
+# datatable()
 ```

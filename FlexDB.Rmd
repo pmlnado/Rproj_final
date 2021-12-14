@@ -129,6 +129,27 @@ mosaic
 
 ### INTERACTIVE MAP OF COLORADO SCHOOLS
 
+```{r}
+# pal <- colorQuantile("YlOrRd", NULL, n = 8)
+# leaflet() %>%
+# addTiles() %>%
+# fitBounds(-102.03,37,-109.03, 41) %>%
+# addTiles() %>%
+# addCircleMarkers(top10CoData$longitude,
+# top10CoData$latitude,
+# color = top10CoData$total_enrollment,
+# radius = 5,
+# fill = T,
+# fillOpacity = 0.2,
+# opacity = 0.6
+# #popup = paste(top10CoData$city_area,
+# # top10CoData$sighting_year,
+# sep = ","))
+
+
+```
+
+
 ```{r fig.height=8, fig.width=12, options(tigris_use_cache = TRUE)}
 top10CoData <-top10CoData %>%
   mutate(longitude = top10CoData$longitude*(-1))
@@ -138,8 +159,8 @@ top10CoData <-top10CoData %>%
 
 content <- paste(sep = "<br/>",
  top10CoData$school,
- top10CoData_sf$total_enrollment,
- top10CoData_sf$`Total Minority`)
+ top10CoData$total_enrollment,
+ top10CoData$`Total Minority`)
 
 
 leaflet() %>%

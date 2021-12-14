@@ -68,9 +68,9 @@ top10_co_schools_enrollment <- top10_co_schools_enrollment %>%
 
 
 #merge data sets
-top10CoData <- left_join(top10_co_schools_coordinates, top10_co_schools_enrollment)
+library(fuzzyjoin)
+top10CoData <- full_join(top10_co_schools_enrollment, top10_co_schools_coordinates, by = "school")
 
-top10CoData
 ```
 
 ### MOSAIC PLOT OF DIVERSITY IN THE TOP 10 COLORADO SCHOOLS

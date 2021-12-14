@@ -165,7 +165,7 @@ top10CoData
 
 class(top10CoData)
 
-#leaflet(top10CoData) %>% 
+##leaflet(top10CoData) %>% 
  # addTiles() %>% 
   #addMarkers(data = top10CoData,
    #         lng = top10CoData$longitude,

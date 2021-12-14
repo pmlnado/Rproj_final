@@ -77,14 +77,10 @@ top10CoData <- full_join(top10_co_schools_enrollment, top10_co_schools_coordinat
 
 #TidyTuesday: School Diversity 
 
-GOAL of the data: To explore the changing makeup of the nation’s school districts
+GOAL of the data: Explore minority distribution in CO's 10 highest enrolled universities: A glance at minority enrollment and salary outlook in the most enrolled universities in Colorado.
 
-To study ethnic diversity in United States schools, The Post measured the racial makeup of each of the country’s public school districts in 1995 and 2017 to see how the growing diversity of children was reflected in their schools. 
+The original dataset explores the proportions of minority students attending school and compares 1995 with 2017 across universities. We decided to use this data set to explore the proportions of minorities among the highest enrolled universities in Colorado.
 
-This dataset explores the proportions of students attending school in three categories: Unidiverse, Diverse and Extremely Diverse per state. A district was considered diverse when no one race constitutes more than 75 percent of the school system’s student body overall. Private and charter schools were excluded from this analysis.
-
-
-GOAL of this dashboard: To glance at minority enrollment and salary outlook in the most enrolled universities in Colorado.
 
 ### INTERACTIVE MAP OF COLORADO SCHOOLS
 

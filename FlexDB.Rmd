@@ -73,7 +73,51 @@ top10CoData <- left_join(top10_co_schools_coordinates, top10_co_schools_enrollme
 top10CoData
 ```
 
-### MOSAIC PLOT OF DIVERSITY IN THE TOP 10 COLORADO SCHOOLS
+### DATA DESCRIPTION
+
+#TidyTuesday: School Diversity 
+
+GOAL of the data: To explore the changing makeup of the nation’s school districts
+To study ethnic diversity in United States schools, The Post measured diversity and integration using student race data from two years: 1995 and 2017.
+
+The Post looked at the racial makeup of each of the country’s public school districts in 1995 and 2017 to see how the growing diversity of children was reflected in their schools. Private and charter schools were excluded from this analysis.
+
+This dataset explores the proportions of students attending school in three categories: Unidiverse, Diverse and Extremely Diverse per state.
+
+Diversity is a measure of the overall racial makeup of a school district. A district is considered diverse when no one race constitutes more than 75 percent of the school system’s student body overall.
+
+Integration determines how well that diversity is reflected across the individual schools. An integrated school leads to better academic performance for students of color without affecting white students’ performance, according to decades of research analyzing test scores and graduation rates. And it offers an array of cultural and social benefits to all students, regardless of race.
+
+
+
+GOAL of our flex dashboard
+
+### INTERACTIVE MAP OF COLORADO SCHOOLS
+
+
+```{r fig.height=8, fig.width=12, options(tigris_use_cache = TRUE)}
+top10CoData <-top10CoData %>%
+  mutate(longitude = top10CoData$longitude*(-1))
+
+content <- paste(sep = "<br/>",
+ top10CoData$school,
+ paste("Total Enrollment = ", top10CoData$total_enrollment),
+ paste("Total Minority = ", top10CoData$`Total Minority`))
+
+
+leaflet() %>%
+addTiles() %>%
+fitBounds(-102.03,37,-109.03, 41) %>%
+addTiles() %>%
+addMarkers(top10CoData$longitude,
+top10CoData$latitude,
+popup = paste(sep = " ",
+                  label = content))
+```
+
+
+
+### MOSAIC PLOT: ENROLLMENT DIVERSITY
 
 ```{r fig.height=10, fig.width=20}        
 #install.packages("ggmosaic")
@@ -106,35 +150,10 @@ mosaic <- top10formosiac %>%
 mosaic <- mosaic + geom_text(data = ggplot_build(mosaic)$data[[1]],
             aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
 mosaic
-```
-
-### INTERACTIVE MAP OF COLORADO SCHOOLS
-
-```{r fig.height=8, fig.width=12, options(tigris_use_cache = TRUE)}
-top10CoData <-top10CoData %>%
-  mutate(longitude = top10CoData$longitude*(-1))
-
-content <- paste(sep = "<br/>",
- top10CoData$school,
- paste("Total Enrollment = ", top10CoData$total_enrollment),
- paste("Total Minority = ", top10CoData$`Total Minority`))
-
-
-leaflet() %>%
-addTiles() %>%
-fitBounds(-102.03,37,-109.03, 41) %>%
-addTiles() %>%
-addMarkers(top10CoData$longitude,
-top10CoData$latitude,
-popup = paste(sep = " ",
-                  label = content))
-
-
-
 
 ```
 
-### SALARY RATES AT COLORADO SCHOOLS
+### SALARY OUTCOME 
 
 ```{r fig.height=10, fig.width=12}
 
@@ -165,21 +184,4 @@ top10_co_early_salary %>%
 
 ```
 
-### DATA DESCRIPTION
 
-#TidyTuesday: School Diversity 
-
-GOAL of the data: To explore the changing makeup of the nation’s school districts
-To study ethnic diversity in United States schools, The Post measured diversity and integration using student race data from two years: 1995 and 2017.
-
-The Post looked at the racial makeup of each of the country’s public school districts in 1995 and 2017 to see how the growing diversity of children was reflected in their schools. Private and charter schools were excluded from this analysis.
-
-This dataset explores the proportions of students attending school in three categories: Unidiverse, Diverse and Extremely Diverse per state.
-
-Diversity is a measure of the overall racial makeup of a school district. A district is considered diverse when no one race constitutes more than 75 percent of the school system’s student body overall.
-
-Integration determines how well that diversity is reflected across the individual schools. An integrated school leads to better academic performance for students of color without affecting white students’ performance, according to decades of research analyzing test scores and graduation rates. And it offers an array of cultural and social benefits to all students, regardless of race.
-
-
-
-GOAL of our flex dashboard

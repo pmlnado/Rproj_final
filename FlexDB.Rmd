@@ -21,7 +21,6 @@ library(tigris)
 #Goal: to assess the diversity ratio among students across all the Higher Education institutions in Colorado
 
 #plan: pivot data wider -> join datasets -> convert into sf object -> good to map
-
 ## data manipulation
 # read data and filter just for Colorado
 
@@ -30,17 +29,12 @@ diversity_school <- read.csv("data/diversity_school.csv")
 co_schools_data <- diversity_school %>% 
   filter(state == "Colorado") 
 
-#co_schools_data
-
 #Count amount of schools in Colorado
 # co_schools_data %>% 
 #   select(name) %>%
 #   distinct() %>%
 #   count()
 
-#top ten universities in CO - all data.
-#top10_co_schools_data <- co_schools_data %>%
-  #head(n= 10)
 
 #pivot wider so that each ethnic group has it's own column, and there is only one University name in the names column
 co_schools_data_wider <- pivot_wider(co_schools_data,
@@ -58,15 +52,11 @@ top10_co_schools_enrollment <- co_schools_data_wider %>%
 top10_co_schools_coordinates <- read.csv("data/co_top10uni_coordinates.csv")
 
 
-#top10_co_schools_coordinates
 
 #change school name column name to match in both datasets
 
 # top10_co_schools_coordinates
 # top10_co_schools_enrollment
-
-
-#change school name column name to match in both datasets
 
 top10_co_schools_coordinates
 top10_co_schools_enrollment
@@ -78,17 +68,9 @@ top10_co_schools_enrollment <- top10_co_schools_enrollment %>%
 
 
 #merge data sets
-top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollment)
+top10CoData <- left_join(top10_co_schools_coordinates, top10_co_schools_enrollment)
 
 top10CoData
-
-
-
-
-#############
-#OK, I am going to try to plot the distribution of ethnics groups across the top 10 largest CO campuses and have that plot pop up in my interactive map using the popuo function.
-
-
 ```
 
 ### MOSAIC PLOT OF DIVERSITY IN THE TOP 10 COLORADO SCHOOLS
@@ -128,33 +110,9 @@ mosaic
 
 ### INTERACTIVE MAP OF COLORADO SCHOOLS
 
-```{r}
-# pal <- colorQuantile("YlOrRd", NULL, n = 8)
-# leaflet() %>%
-# addTiles() %>%
-# fitBounds(-102.03,37,-109.03, 41) %>%
-# addTiles() %>%
-# addCircleMarkers(top10CoData$longitude,
-# top10CoData$latitude,
-# color = top10CoData$total_enrollment,
-# radius = 5,
-# fill = T,
-# fillOpacity = 0.2,
-# opacity = 0.6
-# #popup = paste(top10CoData$city_area,
-# # top10CoData$sighting_year,
-# sep = ","))
-
-
-```
-
-
 ```{r fig.height=8, fig.width=12, options(tigris_use_cache = TRUE)}
 top10CoData <-top10CoData %>%
   mutate(longitude = top10CoData$longitude*(-1))
-
-##Make the data an sf object 
-
 
 content <- paste(sep = "<br/>",
  top10CoData$school,
@@ -171,38 +129,12 @@ top10CoData$latitude,
 popup = paste(sep = " ",
                   label = content))
 
-#popup = paste(top10CoData$city_area,
-#class(top10CoData)
-
-#top10CoData_sf <- st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%
-  #st_set_crs(4269)
-
-#top10CoData_sf
-
-#class(top10CoData_sf)
-
-#pull geophraphical data from tigris to map the diversity data. convert to an sf object.
-
-#co_counties <- counties(state = "CO", class = "sf")
-#class(co_counties)
-
-#mutate longitude values to negative, before making it an sf
-
-#write pop-up content to call later
 
 
-#leaflet(top10CoData) %>% 
- #addTiles() %>% 
- #addMarkers(data = top10CoData,
-  #         lng = top10CoData$longitude,
-   #        lat = top10CoData$latitude,
-    #       popup = paste(top10CoData_sf$total_minority,
-     #             sep = " ",
-      #            label = content))
 
 ```
 
-### Table 
+### SALARY RATES AT COLORADO SCHOOLS
 
 ```{r fig.height=5, fig.width=12}
 
@@ -244,7 +176,7 @@ top10_co_early_salary %>%
 
 ```
 
-### TEXTBOX
+### DATA DESCRIPTION
 
 #TidyTuesday: School Diversity 
 

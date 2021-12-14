@@ -68,8 +68,8 @@ top10_co_schools_coordinates <- read.csv("data/co_top10uni_coordinates.csv")
 
 #change school name column name to match in both datasets
 
-#top10_co_schools_coordinates
-#top10_co_schools_enrollment
+top10_co_schools_coordinates
+top10_co_schools_enrollment
 
 
 top10_co_schools_enrollment <- top10_co_schools_enrollment %>%
@@ -80,8 +80,7 @@ top10_co_schools_enrollment <- top10_co_schools_enrollment %>%
 #merge data sets
 top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollment)
 
-
-# top10CoData
+top10CoData
 
 
 
@@ -246,3 +245,20 @@ top10_co_early_salary %>%
 ```
 
 ### TEXTBOX
+
+#TidyTuesday: School Diversity 
+
+GOAL of the data: To explore the changing makeup of the nation’s school districts
+To study ethnic diversity in United States schools, The Post measured diversity and integration using student race data from two years: 1995 and 2017.
+
+The Post looked at the racial makeup of each of the country’s public school districts in 1995 and 2017 to see how the growing diversity of children was reflected in their schools. Private and charter schools were excluded from this analysis.
+
+This dataset explores the proportions of students attending school in three categories: Unidiverse, Diverse and Extremely Diverse per state.
+
+Diversity is a measure of the overall racial makeup of a school district. A district is considered diverse when no one race constitutes more than 75 percent of the school system’s student body overall.
+
+Integration determines how well that diversity is reflected across the individual schools. An integrated school leads to better academic performance for students of color without affecting white students’ performance, according to decades of research analyzing test scores and graduation rates. And it offers an array of cultural and social benefits to all students, regardless of race.
+
+
+
+GOAL of our flex dashboard

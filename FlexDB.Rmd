@@ -1,0 +1,223 @@
+---
+title: "Final Project"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(lubridate)
+library(leaflet)
+library(DT)
+library(plotly)
+library(flexdashboard)
+library(sf)
+library(tigris)
+
+
+#Goal: to assess the diversity ratio among students across all the Higher Education institutions in Colorado
+
+#plan: pivot data wider -> join datasets -> convert into sf object -> good to map
+
+## data manipulation
+# read data and filter just for Colorado
+
+diversity_school <- read.csv("data/diversity_school.csv")
+
+co_schools_data <- diversity_school %>% 
+  filter(state == "Colorado") 
+
+#co_schools_data
+
+#Count amount of schools in Colorado
+# co_schools_data %>% 
+#   select(name) %>%
+#   distinct() %>%
+#   count()
+
+#top ten universities in CO - all data.
+#top10_co_schools_data <- co_schools_data %>%
+  #head(n= 10)
+
+#pivot wider so that each ethnic group has it's own column, and there is only one University name in the names column
+co_schools_data_wider <- pivot_wider(co_schools_data,
+            names_from = "category",
+            values_from = enrollment)
+
+#top ten universities in CO (based on enrollment)
+
+top10_co_schools_enrollment <- co_schools_data_wider %>%
+  distinct() %>%
+  head(n= 10)
+
+
+#coordinates for the top 10 schools in Colorado
+top10_co_schools_coordinates <- read.csv("data/co_top10uni_coordinates.csv")
+
+
+#top10_co_schools_coordinates
+
+#change school name column name to match in both datasets
+
+# top10_co_schools_coordinates
+# top10_co_schools_enrollment
+
+
+#change school name column name to match in both datasets
+
+#top10_co_schools_coordinates
+#top10_co_schools_enrollment
+
+
+top10_co_schools_enrollment <- top10_co_schools_enrollment %>%
+  rename(school = name)
+#ok, now both have school names listed in column "school". Now join.
+
+
+#merge data sets
+top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollment)
+
+
+# top10CoData
+
+
+
+
+#############
+#OK, I am going to try to plot the distribution of ethnics groups across the top 10 largest CO campuses and have that plot pop up in my interactive map using the popuo function.
+
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Naly's Figure
+
+```{r fig.height=5, fig.width=5}
+
+
+pal <- colorQuantile("YlOrRd", NULL, n = 8)
+top10CoData <-top10CoData %>%
+  mutate(longitude = top10CoData$longitude*(-1))
+
+#top10CoData
+
+
+
+#Make the data an sf object 
+#class(top10CoData)
+
+##Make the data an sf object 
+class(top10CoData)
+
+
+top10CoData_sf <- st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%
+  st_set_crs(4269)
+
+                                              
+#top10CoData_sf
+
+#class(top10CoData_sf)
+
+#pull geophraphical data from tigris to map the diversity data. convert to an sf object.
+
+co_counties <- counties(state = "CO", class = "sf")
+#class(co_counties)
+
+#mutate longitude values to negative, before making it an sf
+
+leaflet() %>% 
+  addTiles() %>% 
+  #fitBounds(-102.03,37,-109.03, 41) %>% 
+  addTiles() %>% 
+  addMarkers(data = top10CoData_sf,
+                   popup = paste(top10CoData_sf$total_minority,
+                                 sep = ","))
+#?addCircleMarkers
+
+# top10CoData_sf
+# top10CoData
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Diversity Mosaic Plot
+```{r fig.height=8, fig.width=10}
+install.packages("ggmosaic")
+library(ggplot2)
+library(ggmosaic)
+
+
+#pivot longer to obtain enrollment counts from "background"
+top10formosiac <- top10_co_schools_enrollment %>%
+  pivot_longer(cols = Women:`Non-Resident Foreign`,
+               names_to = "Background",
+               values_to = "enrollment")
+#building a mosaic plot
+mosaic <- top10formosiac %>%
+  ggplot() +
+  geom_mosaic(aes(x=product(school), fill = Background, na.rm = TRUE, 
+                  weight = enrollment), offset = 0.005) + 
+  theme_minimal() +
+#aesthetic elements  
+  theme(plot.title=element_text(size=20), legend.position="right", 
+        legend.key.size = unit(0.5, 'cm'),legend.title = element_text(size=16), 
+        legend.text = element_text(size=12), aspect.ratio = 1, 
+        axis.text.x = element_text(angle = 270, hjust = 2, size = 14), 
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+#reversing legend order and adding titles
+  scale_fill_discrete(guide = guide_legend(reverse=TRUE)) +
+  labs(y= " ", x= " ", 
+       title = "Visualizing Diversity in Colorado: 10 Largest Universities") 
+#adding enrollment counts to mosaic squares
+mosaic <- mosaic + geom_text(data = ggplot_build(mosaic)$data[[1]],
+            aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
+mosaic
+```
+
+### Table 
+```{r fig.height=5, fig.width=5}
+
+#Reading in all potential data sets
+diversity_school <- read.csv("data/diversity_school.csv")
+all_schools <- read.csv("data/all-schools.csv")
+historical_tuition <- read.csv("data/historical_tuition.csv")
+salary_potential  <- read.csv("data/salary_potential.csv")
+student_diversity <- read.csv("data/student_diversity.csv")
+tuition_cost <- read.csv("data/tuition_cost.csv")
+tuition_income <- read.csv("data/tuition_income.csv")
+
+#Filtering down to just Colorado Schools 
+library(dplyr)
+
+co_school_salary_data <- salary_potential %>% 
+  filter(state_name == "Colorado") 
+
+#co_school_salary_data
+
+#Top 10 Colorado Schools with Highest Early Career Pay 
+top10_co_early_salary <-  co_school_salary_data %>%
+  arrange(desc(early_career_pay)) %>%
+  head(n=10)
+
+top10_co_early_salary %>%
+  datatable()
+
+
+ 
+
+
+# ufo_sightings_co <-  ufo_sightings_co %>%
+#   group_by(sighting_year) %>%
+#   summarize(n_year = n()) %>%
+#   ungroup()
+# ufo_sightings_co %>%
+# datatable()
+
+```

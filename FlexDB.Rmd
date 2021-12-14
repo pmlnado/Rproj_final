@@ -159,8 +159,8 @@ top10CoData <-top10CoData %>%
 
 content <- paste(sep = "<br/>",
  top10CoData$school,
- top10CoData$total_enrollment,
- top10CoData$`Total Minority`)
+ paste("Total Enrollment = ", top10CoData$total_enrollment),
+ paste("Total Minority = ", top10CoData$`Total Minority`))
 
 
 leaflet() %>%

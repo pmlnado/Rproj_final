@@ -73,42 +73,27 @@ top10CoData <- full_join(top10_co_schools_enrollment, top10_co_schools_coordinat
 
 ```
 
-### MOSAIC PLOT OF DIVERSITY IN THE TOP 10 COLORADO SCHOOLS
+### DATA DESCRIPTION
 
-```{r fig.height=10, fig.width=20}        
-#install.packages("ggmosaic")
-library(ggplot2)
-library(ggmosaic)
+#TidyTuesday: School Diversity 
+
+GOAL of the data: To explore the changing makeup of the nation’s school districts
+To study ethnic diversity in United States schools, The Post measured diversity and integration using student race data from two years: 1995 and 2017.
+
+The Post looked at the racial makeup of each of the country’s public school districts in 1995 and 2017 to see how the growing diversity of children was reflected in their schools. Private and charter schools were excluded from this analysis.
+
+This dataset explores the proportions of students attending school in three categories: Unidiverse, Diverse and Extremely Diverse per state.
+
+Diversity is a measure of the overall racial makeup of a school district. A district is considered diverse when no one race constitutes more than 75 percent of the school system’s student body overall.
+
+Integration determines how well that diversity is reflected across the individual schools. An integrated school leads to better academic performance for students of color without affecting white students’ performance, according to decades of research analyzing test scores and graduation rates. And it offers an array of cultural and social benefits to all students, regardless of race.
 
 
-#pivot longer to obtain enrollment counts from "background"
-top10formosiac <- top10_co_schools_enrollment %>%
-  pivot_longer(cols = Women:`Non-Resident Foreign`,
-               names_to = "Background",
-               values_to = "enrollment")
-#building a mosaic plot
-mosaic <- top10formosiac %>%
-  ggplot() +
-  geom_mosaic(aes(x=product(school), fill = Background, na.rm = TRUE, 
-                  weight = enrollment), offset = 0.005) + 
-  theme_minimal() +
-#aesthetic elements  
-  theme(plot.title=element_text(size=20), legend.position="bottom", 
-        legend.key.size = unit(0.2, 'cm'),legend.title = element_text(size=16), 
-        legend.text = element_text(size=12), aspect.ratio = .5, 
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 14), 
-        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
-#reversing legend order and adding titles
-  scale_fill_discrete(guide = guide_legend(reverse=TRUE)) +
-  labs(y= " ", x= " ", 
-       title = "Visualizing Diversity in Colorado: 10 Largest Universities") 
-#adding enrollment counts to mosaic squares
-mosaic <- mosaic + geom_text(data = ggplot_build(mosaic)$data[[1]],
-            aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
-mosaic
-```
+
+GOAL of our flex dashboard
 
 ### INTERACTIVE MAP OF COLORADO SCHOOLS
+
 
 ```{r fig.height=8, fig.width=12, options(tigris_use_cache = TRUE)}
 top10CoData <-top10CoData %>%
@@ -128,15 +113,49 @@ addMarkers(top10CoData$longitude,
 top10CoData$latitude,
 popup = paste(sep = " ",
                   label = content))
+```
 
 
 
+### MOSAIC PLOT: ENROLLMENT DIVERSITY
+
+```{r fig.asp=.5, fig.width=22, fig.align = "center"}        
+#install.packages("ggmosaic")
+library(ggplot2)
+library(ggmosaic)
+
+
+#pivot longer to obtain enrollment counts from "background"
+top10formosiac <- top10_co_schools_enrollment %>%
+  pivot_longer(cols = Women:`Non-Resident Foreign`,
+               names_to = "Background",
+               values_to = "enrollment")
+#building a mosaic plot
+mosaic <- top10formosiac %>%
+  ggplot() +
+  geom_mosaic(aes(x=product(school), fill = Background, na.rm = TRUE, 
+                  weight = enrollment), offset = 0.008) + 
+  theme_minimal() +
+#aesthetic elements  
+  theme(plot.title=element_text(size=22), legend.position="bottom", 
+        legend.key.size = unit(0.2, 'cm'),legend.title = element_text(size=16), 
+        legend.text = element_text(size=12), aspect.ratio = .4, 
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 16), 
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+#reversing legend order and adding titles
+  scale_fill_discrete(guide = guide_legend(reverse=TRUE)) +
+  labs(y= " ", x= " ", 
+       title = "Visualizing Diversity in Colorado: 10 Largest Universities") 
+#adding enrollment counts to mosaic squares
+mosaic <- mosaic + geom_text(data = ggplot_build(mosaic)$data[[1]],
+            aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
+mosaic
 
 ```
 
-### SALARY RATES AT COLORADO SCHOOLS
+### SALARY OUTCOME 
 
-```{r fig.height=5, fig.width=12}
+```{r fig.height=10, fig.width=12}
 
 #Reading in all potential data sets
 diversity_school <- read.csv("data/diversity_school.csv")
@@ -163,34 +182,6 @@ top10_co_early_salary <-  co_school_salary_data %>%
 top10_co_early_salary %>%
   datatable()
 
-
- 
-
-
-# ufo_sightings_co <-  ufo_sightings_co %>%
-#   group_by(sighting_year) %>%
-#   summarize(n_year = n()) %>%
-#   ungroup()
-# ufo_sightings_co %>%
-# datatable()
-
 ```
 
-### DATA DESCRIPTION
 
-#TidyTuesday: School Diversity 
-
-GOAL of the data: To explore the changing makeup of the nation’s school districts
-To study ethnic diversity in United States schools, The Post measured diversity and integration using student race data from two years: 1995 and 2017.
-
-The Post looked at the racial makeup of each of the country’s public school districts in 1995 and 2017 to see how the growing diversity of children was reflected in their schools. Private and charter schools were excluded from this analysis.
-
-This dataset explores the proportions of students attending school in three categories: Unidiverse, Diverse and Extremely Diverse per state.
-
-Diversity is a measure of the overall racial makeup of a school district. A district is considered diverse when no one race constitutes more than 75 percent of the school system’s student body overall.
-
-Integration determines how well that diversity is reflected across the individual schools. An integrated school leads to better academic performance for students of color without affecting white students’ performance, according to decades of research analyzing test scores and graduation rates. And it offers an array of cultural and social benefits to all students, regardless of race.
-
-
-
-GOAL of our flex dashboard

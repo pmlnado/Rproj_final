@@ -102,7 +102,7 @@ pal <- colorQuantile("YlOrRd", NULL, n = 8)
 top10CoData <-top10CoData %>%
   mutate(longitude = top10CoData$longitude*(-1))
 
-###Make the data an sf object 
+##Make the data an sf object 
 class(top10CoData)
 
 top10CoData_sf <- st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%

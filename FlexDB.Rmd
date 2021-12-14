@@ -2,6 +2,7 @@
 title: "R FINAL PROJECT"
 output: 
   flexdashboard::flex_dashboard:
+    orientation: columns
     vertical_layout: scroll
 ---
 
@@ -91,8 +92,7 @@ top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollm
 
 ```
 
-
-### Naly's Figure
+### MOSAIC PLOT OF DIVERSITY IN THE TOP 10 COLORADO SCHOOLS
 
 ```{r fig.height=8, fig.width=12}        
 #install.packages("ggmosaic")
@@ -127,8 +127,7 @@ mosaic <- mosaic + geom_text(data = ggplot_build(mosaic)$data[[1]],
 mosaic
 ```
 
-
-### Diversity Mosaic Plot
+### INTERACTIVE MAP OF COLORADO SCHOOLS
 
 ```{r fig.height=8, fig.width=12, options(tigris_use_cache = TRUE)}
 pal <- colorQuantile("YlOrRd", NULL, n = 8)
@@ -141,6 +140,8 @@ class(top10CoData)
 top10CoData_sf <- st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%
   st_set_crs(4269)
 
+  
+
 class(top10CoData_sf)
 
 #pull geophraphical data from tigris to map the diversity data. convert to an sf object.
@@ -151,25 +152,32 @@ class(co_counties)
 #mutate longitude values to negative, before making it an sf
 
 #write pop-up content to call later
-content <- paste(sep = "<br/>",
-  top10CoData$school,
-  top10CoData_sf$total_enrollment,
-  top10CoData_sf$`Total Minority`)
+#content <- paste(sep = "<br/>",
+ # top10CoData$school,
+  #top10CoData_sf$total_enrollment,
+  #top10CoData_sf$`Total Minority`)
 
+leaflet(top10CoData) %>%
+  addTiles() %>%
+  addCircleMarkers(color = ~pal(total_enrollment))
 
+top10CoData
 
-leaflet() %>% 
-  addTiles() %>% 
-  addMarkers(data = top10CoData_sf,
-             top10CoData$longitude,
-             top10CoData$latitude,
-                   popup = paste(top10CoData_sf$total_minority,
-                                 sep = " ",
-                                 label = content))
+class(top10CoData)
+
+#leaflet(top10CoData) %>% 
+ # addTiles() %>% 
+  #addMarkers(data = top10CoData,
+   #         lng = top10CoData$longitude,
+    #        lat = top10CoData$latitude,
+     #       popup = paste(top10CoData_sf$total_minority,
+      #            sep = " ",
+       #           label = content))
 
 ```
 
 ### Table 
+
 ```{r fig.height=5, fig.width=12}
 
 #Reading in all potential data sets

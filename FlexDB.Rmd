@@ -1,5 +1,5 @@
 ---
-title: "Final R Project"
+title: "Final R Pro ject"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns

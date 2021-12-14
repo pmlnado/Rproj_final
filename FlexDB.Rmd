@@ -1,5 +1,5 @@
 ---
-title: "Final Project"
+title: "Final R Project"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -149,7 +149,7 @@ Column {data-width=350}
 
 ### Diversity Mosaic Plot
 ```{r fig.height=8, fig.width=10}
-install.packages("ggmosaic")
+#install.packages("ggmosaic")
 library(ggplot2)
 library(ggmosaic)
 

@@ -136,7 +136,7 @@ popup = paste(sep = " ",
 
 ### SALARY RATES AT COLORADO SCHOOLS
 
-```{r fig.height=5, fig.width=12}
+```{r fig.height=10, fig.width=12}
 
 #Reading in all potential data sets
 diversity_school <- read.csv("data/diversity_school.csv")
@@ -162,17 +162,6 @@ top10_co_early_salary <-  co_school_salary_data %>%
 
 top10_co_early_salary %>%
   datatable()
-
-
- 
-
-
-# ufo_sightings_co <-  ufo_sightings_co %>%
-#   group_by(sighting_year) %>%
-#   summarize(n_year = n()) %>%
-#   ungroup()
-# ufo_sightings_co %>%
-# datatable()
 
 ```
 

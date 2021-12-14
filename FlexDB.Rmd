@@ -16,7 +16,7 @@ library(plotly)
 library(flexdashboard)
 library(sf)
 library(tigris)
-
+#install.packages("fuzzyjoin")
 
 #Goal: to assess the diversity ratio among students across all the Higher Education institutions in Colorado
 
@@ -149,7 +149,7 @@ mosaic
 
 ### SALARY OUTCOME 
 
-```{r fig.height=10, fig.width=12}
+```{r fig.height=10, fig.width=10}
 
 #Reading in all potential data sets
 diversity_school <- read.csv("data/diversity_school.csv")

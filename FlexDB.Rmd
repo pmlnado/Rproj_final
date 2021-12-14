@@ -130,49 +130,55 @@ mosaic
 ### INTERACTIVE MAP OF COLORADO SCHOOLS
 
 ```{r fig.height=8, fig.width=12, options(tigris_use_cache = TRUE)}
-pal <- colorQuantile("YlOrRd", NULL, n = 8)
 top10CoData <-top10CoData %>%
   mutate(longitude = top10CoData$longitude*(-1))
 
 ##Make the data an sf object 
-class(top10CoData)
 
-top10CoData_sf <- st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%
-  st_set_crs(4269)
 
-  
+content <- paste(sep = "<br/>",
+ top10CoData$school,
+ top10CoData_sf$total_enrollment,
+ top10CoData_sf$`Total Minority`)
 
-class(top10CoData_sf)
+
+leaflet() %>%
+addTiles() %>%
+fitBounds(-102.03,37,-109.03, 41) %>%
+addTiles() %>%
+addMarkers(top10CoData$longitude,
+top10CoData$latitude,
+popup = paste(sep = " ",
+                  label = content))
+
+#popup = paste(top10CoData$city_area,
+#class(top10CoData)
+
+#top10CoData_sf <- st_as_sf(top10CoData, coords = c("longitude", "latitude")) %>%
+  #st_set_crs(4269)
+
+#top10CoData_sf
+
+#class(top10CoData_sf)
 
 #pull geophraphical data from tigris to map the diversity data. convert to an sf object.
 
-co_counties <- counties(state = "CO", class = "sf")
-class(co_counties)
+#co_counties <- counties(state = "CO", class = "sf")
+#class(co_counties)
 
 #mutate longitude values to negative, before making it an sf
 
 #write pop-up content to call later
-#content <- paste(sep = "<br/>",
- # top10CoData$school,
-  #top10CoData_sf$total_enrollment,
-  #top10CoData_sf$`Total Minority`)
 
-leaflet(top10CoData) %>%
-  addTiles() %>%
-  addCircleMarkers(color = ~pal(total_enrollment))
 
-top10CoData
-
-class(top10CoData)
-
-##leaflet(top10CoData) %>% 
- # addTiles() %>% 
-  #addMarkers(data = top10CoData,
-   #         lng = top10CoData$longitude,
-    #        lat = top10CoData$latitude,
-     #       popup = paste(top10CoData_sf$total_minority,
-      #            sep = " ",
-       #           label = content))
+#leaflet(top10CoData) %>% 
+ #addTiles() %>% 
+ #addMarkers(data = top10CoData,
+  #         lng = top10CoData$longitude,
+   #        lat = top10CoData$latitude,
+    #       popup = paste(top10CoData_sf$total_minority,
+     #             sep = " ",
+      #            label = content))
 
 ```
 

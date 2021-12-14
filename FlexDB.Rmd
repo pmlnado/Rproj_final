@@ -98,7 +98,6 @@ Column {data-width=650}
 ### Naly's Figure
 
 ```{r fig.height=5, fig.width=5, options(tigris_use_cache = TRUE)}
-
 pal <- colorQuantile("YlOrRd", NULL, n = 8)
 top10CoData <-top10CoData %>%
   mutate(longitude = top10CoData$longitude*(-1))
@@ -129,6 +128,8 @@ content <- paste(sep = "<br/>",
 leaflet() %>% 
   addTiles() %>% 
   addMarkers(data = top10CoData_sf,
+             top10CoData$longitude,
+             top10CoData$latitude,
                    popup = paste(top10CoData_sf$total_minority,
                                  sep = " ",
                                  label = content))

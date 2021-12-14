@@ -2,8 +2,7 @@
 title: "R FINAL PROJECT"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
+    vertical_layout: scroll
 ---
 
 ```{r setup, include=FALSE}
@@ -92,12 +91,46 @@ top10CoData <- inner_join(top10_co_schools_coordinates, top10_co_schools_enrollm
 
 ```
 
-Column {data-width=650}
------------------------------------------------------------------------
 
 ### Naly's Figure
 
-```{r fig.height=5, fig.width=5, options(tigris_use_cache = TRUE)}
+```{r fig.height=8, fig.width=12}        
+#install.packages("ggmosaic")
+library(ggplot2)
+library(ggmosaic)
+
+
+#pivot longer to obtain enrollment counts from "background"
+top10formosiac <- top10_co_schools_enrollment %>%
+  pivot_longer(cols = Women:`Non-Resident Foreign`,
+               names_to = "Background",
+               values_to = "enrollment")
+#building a mosaic plot
+mosaic <- top10formosiac %>%
+  ggplot() +
+  geom_mosaic(aes(x=product(school), fill = Background, na.rm = TRUE, 
+                  weight = enrollment), offset = 0.005) + 
+  theme_minimal() +
+#aesthetic elements  
+  theme(plot.title=element_text(size=20), legend.position="right", 
+        legend.key.size = unit(0.2, 'cm'),legend.title = element_text(size=16), 
+        legend.text = element_text(size=12), aspect.ratio = .5, 
+        axis.text.x = element_text(angle = 120, hjust = 1, size = 14), 
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+#reversing legend order and adding titles
+  scale_fill_discrete(guide = guide_legend(reverse=TRUE)) +
+  labs(y= " ", x= " ", 
+       title = "Visualizing Diversity in Colorado: 10 Largest Universities") 
+#adding enrollment counts to mosaic squares
+mosaic <- mosaic + geom_text(data = ggplot_build(mosaic)$data[[1]],
+            aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
+mosaic
+```
+
+
+### Diversity Mosaic Plot
+
+```{r fig.height=8, fig.width=12, options(tigris_use_cache = TRUE)}
 pal <- colorQuantile("YlOrRd", NULL, n = 8)
 top10CoData <-top10CoData %>%
   mutate(longitude = top10CoData$longitude*(-1))
@@ -133,46 +166,7 @@ leaflet() %>%
                    popup = paste(top10CoData_sf$total_minority,
                                  sep = " ",
                                  label = content))
-                                   
-                              
 
-```
-
-Column {data-width=350}
------------------------------------------------------------------------
-
-### Diversity Mosaic Plot
-```{r fig.height=8, fig.width=12}
-#install.packages("ggmosaic")
-library(ggplot2)
-library(ggmosaic)
-
-
-#pivot longer to obtain enrollment counts from "background"
-top10formosiac <- top10_co_schools_enrollment %>%
-  pivot_longer(cols = Women:`Non-Resident Foreign`,
-               names_to = "Background",
-               values_to = "enrollment")
-#building a mosaic plot
-mosaic <- top10formosiac %>%
-  ggplot() +
-  geom_mosaic(aes(x=product(school), fill = Background, na.rm = TRUE, 
-                  weight = enrollment), offset = 0.005) + 
-  theme_minimal() +
-#aesthetic elements  
-  theme(plot.title=element_text(size=20), legend.position="right", 
-        legend.key.size = unit(0.2, 'cm'),legend.title = element_text(size=16), 
-        legend.text = element_text(size=12), aspect.ratio = .5, 
-        axis.text.x = element_text(angle = 120, hjust = 1, size = 14), 
-        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
-#reversing legend order and adding titles
-  scale_fill_discrete(guide = guide_legend(reverse=TRUE)) +
-  labs(y= " ", x= " ", 
-       title = "Visualizing Diversity in Colorado: 10 Largest Universities") 
-#adding enrollment counts to mosaic squares
-mosaic <- mosaic + geom_text(data = ggplot_build(mosaic)$data[[1]],
-            aes(x = (xmin+xmax)/2, y = (ymin+ymax)/2, label=.wt))
-mosaic
 ```
 
 ### Table 
@@ -215,3 +209,5 @@ top10_co_early_salary %>%
 # datatable()
 
 ```
+
+### TEXTBOX
